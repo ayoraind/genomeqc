@@ -12,6 +12,7 @@ include { PIGZ_UNCOMPRESS as UNCOMPRESS_FASTA } from '../modules/nf-core/pigz/un
 include { PIGZ_UNCOMPRESS as UNCOMPRESS_GFF   } from '../modules/nf-core/pigz/uncompress/main'
 include { GENOME                              } from '../subworkflows/local/genome'
 include { GENOME_AND_ANNOTATION               } from '../subworkflows/local/genome_and_annotation'
+include { NEXTFLOW_RUN as HITE                } from '../modules/local/nextflow/run/main'
 include { MULTIQC                             } from '../modules/nf-core/multiqc/main'
 include { TREE_SUMMARY                        } from '../modules/local/tree_summary'
 include { paramsSummaryMap                    } from 'plugin/nf-validation'
@@ -154,6 +155,25 @@ workflow GENOMEQC {
             ch_gff
         )
     }
+
+
+//  ch_fasta.map { meta,fasta -> tuple(meta,"genome:${fasta.toUriString()}") }
+//            .collectFile { meta,item ->
+//        [ "${meta.id}.yml", item + '\n' ]
+//    }.view()
+
+
+    //
+    // Add the Hite Pipeline
+    //  
+    HITE (
+            'CSU-KangHu/HiTE',
+            params.hite_opts,   // workflow opts supplied as params for flexibility
+            params.hite_params_file ? Channel.fromPath(params.hite_params_file, checkIfExists: true) : Channel.value([]),
+            params.hite_samplesheet ? Channel.fromPath(params.hite_samplesheet, checkIfExists: true) : ch_fasta.map { meta,fasta -> fasta },
+            params.hite_add_config ? Channel.fromPath(params.hite_add_config, checkIfExists: true) : Channel.value([]),
+
+        )
 
     //
     // MODULE: Run TREE SUMMARY
