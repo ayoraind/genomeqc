@@ -1,0 +1,2 @@
+hite_opts: '-resume -profile docker'
+hite_config: 'conf/hite.config'
