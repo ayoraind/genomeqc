@@ -73,7 +73,7 @@ workflow GENOMEQC {
     fasta = NCBIGENOMEDOWNLOAD.out.fna.mix( ch_input.local.map { [it[0],file(it[2])] } )
     gff   = NCBIGENOMEDOWNLOAD.out.gff.mix( ch_input.local.map { [it[0],file(it[1])] } )
 
-    // Uncompress files if necessary | Consider using brances as an alternative
+    // Uncompress files if necessary | Consider using branches as an alternative
     if (fasta.map { it[1].endsWith(".gz") } ) {
         ch_fasta = UNCOMPRESS_FASTA ( fasta ).file
     } else {
@@ -161,13 +161,13 @@ workflow GENOMEQC {
 //            .collectFile { meta,item ->
 //        [ "${meta.id}.yml", item + '\n' ]
 //    }.view()
-
+// ch_fasta.map { meta,fasta -> fasta }.view()
 
     //
     // Add the Hite Pipeline
     //  
     HITE (
-            'CSU-KangHu/HiTE',
+            'CSU-KangHu/HiTE-Nextflow',
             params.hite_opts,   // workflow opts supplied as params for flexibility
             params.hite_params_file ? Channel.fromPath(params.hite_params_file, checkIfExists: true) : Channel.value([]),
             params.hite_samplesheet ? Channel.fromPath(params.hite_samplesheet, checkIfExists: true) : ch_fasta.map { meta,fasta -> fasta },
@@ -244,3 +244,4 @@ workflow GENOMEQC {
     THE END
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+
