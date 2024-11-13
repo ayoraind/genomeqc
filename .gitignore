@@ -5,7 +5,7 @@
 data/
 nf-test
 .nf-test*
-results/
+results*/
 test.xml
 testing*
 testing/
