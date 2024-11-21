@@ -163,15 +163,16 @@ workflow GENOMEQC {
 //    }.view()
 // ch_fasta.map { meta,fasta -> fasta }.view()
 
+
     //
     // Add the Hite Pipeline
     //  
     HITE (
             'CSU-KangHu/HiTE-Nextflow',
             params.hite_opts,   // workflow opts supplied as params for flexibility
-            params.hite_params_file ? Channel.fromPath(params.hite_params_file, checkIfExists: true) : Channel.value([]),
+            params.hite_params_file ? Channel.fromPath(params.hite_params_file, checkIfExists: true).collect() : Channel.value([]),
             params.hite_samplesheet ? Channel.fromPath(params.hite_samplesheet, checkIfExists: true) : ch_fasta.map { meta,fasta -> fasta },
-            params.hite_add_config ? Channel.fromPath(params.hite_add_config, checkIfExists: true) : Channel.value([]),
+            params.hite_add_config ? Channel.fromPath(params.hite_add_config, checkIfExists: true).collect() : Channel.value([]),
 
         )
 
