@@ -29,6 +29,7 @@ process NEXTFLOW_RUN {
     ]
     def builder = new ProcessBuilder(nxf_cmd.join(" ").tokenize(" "))
     builder.directory(cache_dir.toFile())
+    builder.environment().put("NXF_HOME",".")  // <--- THIS LINE, makes it pull the workflow to the cache so they don't all try to write to the same place
     process = builder.start()
     assert process.waitFor() == 0: process.text
 
