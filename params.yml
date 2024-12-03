@@ -1,2 +1,2 @@
-"hite_opts" : '-resume -profile docker'
-"hite_add_config" : '${projectDir}/conf/hite.config'
+hite_opts: '-resume'
+hite_add_config: '${projectDir}/conf/hite.config'
