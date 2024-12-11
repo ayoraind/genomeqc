@@ -23,7 +23,7 @@ process NEXTFLOW_RUN {
             pipeline_name,
             nextflow_opts,
             params_file ? "-params-file $params_file" : '',
-            additional_config ? "-c $additional_config" : '',
+            additional_config ? additional_config.collect { config -> "-c $config" }.join(" ") : '',
             genome ? "--genome $genome" : '',
             "--outdir $task.workDir/results",
     ]
